@@ -67,18 +67,28 @@ router.post('/',function(req,res,next){
 	/* Note: The token is optional for some requests
 	 */
 	const token = {
-	  key:'oauth_token'
+	  key:oauth_token
 	};
 	request({
 		url: request_data.url,
 		method: request_data.method,
 		form: request_data.data,
-		headers: oauth.toHeader(oauth.authorize(request_data))
+		headers: oauth.toHeader(oauth.authorize(request_data,token))
 	}, function(error, response, body) {
 		if(error)
-		res.json(response);
+			res.json(err);
 		else{
-			res.json(response);
+			var data=body.split("&");
+			var oauth_token=data[0].split("=")[1];
+			var oauth_token_secret=data[1].split("=")[1];
+			var user_id=data[2].split("=")[1];
+			var screen_name=data[3].split("=")[1];
+			res.json({
+				oauth_token:oauth_token,
+				oauth_token_secret:oauth_token_secret,
+				user_id:user_id,
+				screen_name:screen_name
+			});
 		}
 	});
 });
