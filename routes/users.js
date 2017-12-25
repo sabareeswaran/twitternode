@@ -76,7 +76,7 @@ router.post('/',function(req,res,next){
 		headers: oauth.toHeader(oauth.authorize(request_data))
 	}, function(error, response, body) {
 		if(error)
-		res.json(error);
+		res.json(response);
 		else{
 			res.json(response);
 		}
