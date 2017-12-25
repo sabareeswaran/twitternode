@@ -38,7 +38,7 @@ request({
     if(error)
 	res.json(error);
 	else{
-		var data = body.split("&");
+	var data = body.split("&");
 		res.json({
 			token:data[0]
 		});
