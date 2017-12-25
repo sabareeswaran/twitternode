@@ -39,7 +39,7 @@ request({
 	res.json(error);
 	else{
 	var data = body.split("&");
-		res.json(token:data[0]);
+		res(token:data[0]);
 	}
 });
 });
