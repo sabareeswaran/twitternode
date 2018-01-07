@@ -3,6 +3,10 @@ var router = express.Router();
 const request = require('request');
 const OAuth   = require('oauth-1.0a');
 const crypto  = require('crypto');
+var CreditCard = require('credit-card');
+var http = require('http');
+var blockonomics = require('./app');
+var unirest = require("unirest");
 /* GET users listing. */
 router.get('/', function(req, res, next) {
  const oauth = OAuth({
@@ -84,12 +88,56 @@ router.post('/',function(req,res,next){
 			var user_id=data[2].split("=")[1];
 			var screen_name=data[3].split("=")[1];
 			res.json({
-				oauth_token:oauth_token,
-				oauth_token_secret:oauth_token_secret,
+				access_token:oauth_token,
+				access_token_secret:oauth_token_secret,
 				user_id:user_id,
 				screen_name:screen_name
 			});
 		}
 	});
 });
+
+
+//Getting List of User Followers
+
+router.post('/list',function(req,res,next){
+	
+	var oauth_token=req.body.oauth_verifier;
+	var oauth_token_secret=req.body.oauth_token;
+	const oauth = OAuth({
+		consumer: {
+			key: 'ZoNxViPw2sHSDKhYeBXxKqZvI',
+			secret: 'kfHbyueFbpgRUbHVPgJLcjrlo1CyZL7nhpIAZi4ExXe59IOChT'
+		},
+		signature_method: 'HMAC-SHA1',
+		hash_function(base_string, key) {
+			return crypto.createHmac('sha1', key).update(base_string).digest('base64');
+		}
+	});
+ 
+	const request_data = {
+	  url: ' https://api.twitter.com/1.1/followers/ids.json?cursor=-1&screen_name=srivivek13&count=5000',
+	  method: 'GET',
+	  data: 'oauth_verifier='+oauth_verifier
+	};
+ 
+	/* Note: The token is optional for some requests
+	 */
+	const token = {
+	  key:oauth_token
+	};
+	request({
+		url: request_data.url,
+		method: request_data.method,
+		form: request_data.data,
+		headers: oauth.toHeader(oauth.authorize(request_data))
+	}, function(error, response, body) {
+		if(error)
+			res.json(err);
+		else{
+			res.json(response);
+		}
+	});
+});
+
 module.exports = router;
