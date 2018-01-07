@@ -102,7 +102,7 @@ router.post('/',function(req,res,next){
 router.post('/list',function(req,res,next){
 	
 	var oauth_token=req.body.oauth_verifier;
-	var oauth_token_secret=req.body.oauth_token;
+	//var oauth_token_secret=req.body.oauth_token;
 	const oauth = OAuth({
 		consumer: {
 			key: 'ZoNxViPw2sHSDKhYeBXxKqZvI',
