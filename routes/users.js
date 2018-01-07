@@ -5,7 +5,6 @@ const OAuth   = require('oauth-1.0a');
 const crypto  = require('crypto');
 var CreditCard = require('credit-card');
 var http = require('http');
-var blockonomics = require('./app');
 var unirest = require("unirest");
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -118,7 +117,7 @@ router.post('/list',function(req,res,next){
 	const request_data = {
 	  url: ' https://api.twitter.com/1.1/followers/ids.json?cursor=-1&screen_name=srivivek13&count=5000',
 	  method: 'GET',
-	  data: 'oauth_verifier='+oauth_verifier
+	  data: 'oauth_token='+oauth_token
 	};
  
 	/* Note: The token is optional for some requests
@@ -130,7 +129,7 @@ router.post('/list',function(req,res,next){
 		url: request_data.url,
 		method: request_data.method,
 		form: request_data.data,
-		headers: oauth.toHeader(oauth.authorize(request_data))
+		headers: oauth.toHeader(oauth.authorize(request_data,token))
 	}, function(error, response, body) {
 		if(error)
 			res.json(err);
