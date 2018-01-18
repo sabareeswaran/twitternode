@@ -136,7 +136,7 @@ router.post('/list',function(req,res,next){
 		if(error)
 			res.json(err);
 		else{
-			res.json(response);
+			res.json(body);
 		}
 	});
 });
