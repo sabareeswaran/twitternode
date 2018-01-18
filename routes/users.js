@@ -101,8 +101,9 @@ router.post('/',function(req,res,next){
 
 router.post('/list',function(req,res,next){
 	
-	var oauth_token=req.body.oauth_verifier;
-	//var oauth_token_secret=req.body.oauth_token;
+	var access_token_secret=req.body.access_token_secret;
+	var access_token=req.body.access_token;
+	
 	const oauth = OAuth({
 		consumer: {
 			key: 'ZoNxViPw2sHSDKhYeBXxKqZvI',
@@ -115,16 +116,17 @@ router.post('/list',function(req,res,next){
 	});
  
 	const request_data = {
-	  url: ' https://api.twitter.com/1.1/followers/ids.json?cursor=-1&screen_name=srivivek13&count=5000',
+	  url: 'https://api.twitter.com/1.1/friends/list.json',
 	  method: 'GET',
-	  data: 'oauth_token='+oauth_token
-	};
+	  };
  
 	/* Note: The token is optional for some requests
 	 */
 	const token = {
-	  key:oauth_token
+		key:access_token,
+		secret:access_token_secret
 	};
+
 	request({
 		url: request_data.url,
 		method: request_data.method,
