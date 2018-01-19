@@ -123,8 +123,8 @@ router.post('/list',function(req,res,next){
 	/* Note: The token is optional for some requests
 	 */
 	const token = {
-		key:'z737976134835527680-yspdeu2AR4vamfFQowOPde9QquV',
-		secret:'OCSIUTthYfze31gSIREnrrHUI6thsXveseIw3iir9j7'
+		key:access_token,
+		secret:access_token_secret
 	};
 
 	request({
@@ -136,10 +136,7 @@ router.post('/list',function(req,res,next){
 		if(error)
 			res.json(err);
 		else{
-			res.json({
-				response:200,
-				users:response
-			});
+			res.json(body);
 		}
 	});
 });
