@@ -138,7 +138,7 @@ router.post('/list',function(req,res,next){
 		else{
 			res.json({
 				response:200,
-				users:body.users
+				users:response
 			});
 		}
 	});
