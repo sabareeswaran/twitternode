@@ -137,7 +137,7 @@ router.post('/list',function(req,res,next){
 			res.json(err);
 		else{
 			var data=body.users;
-			res.json(data);
+			res.json(data[0]);
 		}
 	});
 });
