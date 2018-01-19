@@ -136,8 +136,16 @@ router.post('/list',function(req,res,next){
 		if(error)
 			res.json(err);
 		else{
-			var data=body['users'];
-			res.json(data[0].name);
+			if(response['statusCode']==200){
+				res.json({
+					success:true,
+					users:JSON.parse(body)['users']
+				});
+			}else{
+				res.json({
+					success:false
+				});
+			}
 		}
 	});
 });
