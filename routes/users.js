@@ -192,7 +192,7 @@ router.post('/profile',function(req,res,next){
 			if(response['statusCode']==200){
 				res.json({
 					success:true,
-					users:JSON.parse(body)
+					user:JSON.parse(body)
 				});
 			}else{
 				res.json({
