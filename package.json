@@ -6,6 +6,8 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "arr-diff": "^4.0.0",
+    "blockonomics": "1.0.1",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "credit-card": "^3.0.1",
@@ -16,7 +18,6 @@
     "morgan": "~1.9.0",
     "oauth-1.0a": "^2.2.3",
     "request": "^2.83.0",
-    "serve-favicon": "~2.4.5",
-	"blockonomics":"1.0.1"
+    "serve-favicon": "~2.4.5"
   }
 }
