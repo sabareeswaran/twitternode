@@ -692,7 +692,9 @@ router.post('/unfollow',function(req,res,next){
 				});
 			}else{
 				res.json({
-					success:false
+					success:false,
+					description:JSON.parse(body);
+					
 				});
 			}
 		}
