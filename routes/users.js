@@ -693,7 +693,7 @@ router.post('/unfollow',function(req,res,next){
 			}else{
 				res.json({
 					success:false,
-					description:JSON.parse(body);
+					description:JSON.parse(body)
 					
 				});
 			}
