@@ -744,8 +744,7 @@ router.post('/mute',function(req,res,next){
 		else{
 			if(response['statusCode']==200){
 				res.json({
-					success:true,
-					user:JSON.parse(body)
+					success:true
 				});
 			}else{
 				res.json({
@@ -799,7 +798,6 @@ router.post('/unmute',function(req,res,next){
 			if(response['statusCode']==200){
 				res.json({
 					success:true
-					user:JSON.parse(body)
 				});
 			}else{
 				res.json({
