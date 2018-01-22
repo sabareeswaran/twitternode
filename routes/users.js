@@ -937,7 +937,7 @@ router.post('/tweet',function(req,res,next){
 	});
  
 	const request_data = {
-	  url: 'https://api.twitter.com/1.1/statuses/update.json?status='+data,
+	  url: 'https://api.twitter.com/1.1/statuses/update.json?status=Maybe%20he%27ll%20finally%20find%20his%20keys.%20%23peterfalk',
 	  method: 'POST',
 	  };
  
