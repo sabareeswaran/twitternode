@@ -916,4 +916,58 @@ router.post('/unblock',function(req,res,next){
 		}
 	});
 });
+
+
+//Tweet user
+router.post('/tweet',function(req,res,next){
+	
+	var access_token_secret=req.body.access_token_secret;
+	var access_token=req.body.access_token;
+	var id=req.body.id;
+	const oauth = OAuth({
+		consumer: {
+			key: 'ZoNxViPw2sHSDKhYeBXxKqZvI',
+			secret: 'kfHbyueFbpgRUbHVPgJLcjrlo1CyZL7nhpIAZi4ExXe59IOChT'
+		},
+		signature_method: 'HMAC-SHA1',
+		hash_function(base_string, key) {
+			return crypto.createHmac('sha1', key).update(base_string).digest('base64');
+		}
+	});
+ 
+	const request_data = {
+	  url: 'https://api.twitter.com/1.1/statuses/update.json?status=Maybe%20he%27ll%20finally%20find%20his%20keys.%20%23peterfalk',
+	  method: 'POST',
+	  };
+ 
+	/* Note: The token is optional for some requests
+	 */
+	const token = {
+		key:access_token,
+		secret:access_token_secret
+	};
+
+	request({
+		url: request_data.url,
+		method: request_data.method,
+		form: request_data.data,
+		headers: oauth.toHeader(oauth.authorize(request_data,token))
+	}, function(error, response, body) {
+		if(error)
+			res.json(err);
+		else{
+			if(response['statusCode']==200){
+				res.json({
+					success:true
+				});
+			}else{
+				res.json({
+					success:false,
+					description:JSON.parse(body)
+					
+				});
+			}
+		}
+	});
+});
 module.exports = router;
