@@ -1012,7 +1012,7 @@ router.post('/timeline',function(req,res,next){
 		else{
 			if(response['statusCode']==200){
 				res.json({
-					success:true
+					success:true,
 					timeline:JSON.parse(body)
 				});
 			}else{
