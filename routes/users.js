@@ -809,4 +809,111 @@ router.post('/unmute',function(req,res,next){
 		}
 	});
 });
+
+
+//Block user
+router.post('/block',function(req,res,next){
+	
+	var access_token_secret=req.body.access_token_secret;
+	var access_token=req.body.access_token;
+	var id=req.body.id;
+	const oauth = OAuth({
+		consumer: {
+			key: 'ZoNxViPw2sHSDKhYeBXxKqZvI',
+			secret: 'kfHbyueFbpgRUbHVPgJLcjrlo1CyZL7nhpIAZi4ExXe59IOChT'
+		},
+		signature_method: 'HMAC-SHA1',
+		hash_function(base_string, key) {
+			return crypto.createHmac('sha1', key).update(base_string).digest('base64');
+		}
+	});
+ 
+	const request_data = {
+	  url: 'https://api.twitter.com/1.1/blocks/create.json?user_id='+id+'&skip_status=1',
+	  method: 'POST',
+	  };
+ 
+	/* Note: The token is optional for some requests
+	 */
+	const token = {
+		key:access_token,
+		secret:access_token_secret
+	};
+
+	request({
+		url: request_data.url,
+		method: request_data.method,
+		form: request_data.data,
+		headers: oauth.toHeader(oauth.authorize(request_data,token))
+	}, function(error, response, body) {
+		if(error)
+			res.json(err);
+		else{
+			if(response['statusCode']==200){
+				res.json({
+					success:true
+				});
+			}else{
+				res.json({
+					success:false,
+					description:JSON.parse(body)
+					
+				});
+			}
+		}
+	});
+});
+
+//Block user
+router.post('/unblock',function(req,res,next){
+	
+	var access_token_secret=req.body.access_token_secret;
+	var access_token=req.body.access_token;
+	var id=req.body.id;
+	const oauth = OAuth({
+		consumer: {
+			key: 'ZoNxViPw2sHSDKhYeBXxKqZvI',
+			secret: 'kfHbyueFbpgRUbHVPgJLcjrlo1CyZL7nhpIAZi4ExXe59IOChT'
+		},
+		signature_method: 'HMAC-SHA1',
+		hash_function(base_string, key) {
+			return crypto.createHmac('sha1', key).update(base_string).digest('base64');
+		}
+	});
+ 
+	const request_data = {
+	  url: 'https://api.twitter.com/1.1/blocks/destroy.json?user_id='+id+'&skip_status=1',
+	  method: 'POST',
+	  };
+ 
+	/* Note: The token is optional for some requests
+	 */
+	const token = {
+		key:access_token,
+		secret:access_token_secret
+	};
+
+	request({
+		url: request_data.url,
+		method: request_data.method,
+		form: request_data.data,
+		headers: oauth.toHeader(oauth.authorize(request_data,token))
+	}, function(error, response, body) {
+		if(error)
+			res.json(err);
+		else{
+			if(response['statusCode']==200){
+				res.json({
+					success:true
+				});
+			}else{
+				res.json({
+					success:false,
+					description:JSON.parse(body)
+					
+				});
+			}
+		}
+	});
+});
 module.exports = router;
