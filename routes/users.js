@@ -1045,7 +1045,7 @@ router.post('/timeline',function(req,res,next){
 	});
  
 	const request_data = {
-	  url: 'https://api.twitter.com/1.1/statuses/user_timeline.json?id='+id+'&count=100',
+	  url: 'https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name='+id+'&count=100',
 	  method: 'GET',
 	  };
  
