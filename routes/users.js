@@ -208,8 +208,8 @@ router.post('/followers',function(req,res,next){
 	var access_token=req.body.access_token;
 	var user_arr=[];
 	
-	twitter.followers(access_token,access_token_secret,function(error,followers){
-		if(!error){
+	twitter.followers(access_token,access_token_secret,function(err,followers){
+		if(!err){
 			res.json({
 				success:true,
 				user:followers

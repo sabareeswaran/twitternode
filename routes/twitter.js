@@ -11,7 +11,7 @@ var arr_diff = require('arr-diff');
 var rp = require('request-promise');
 module.exports={
     followers:function(access_token,access_token_secret,callback){
-        
+        console.log("Followes");
         var access_token_secret=access_token_secret;
         var access_token=access_token;
         
@@ -39,10 +39,10 @@ module.exports={
         let users = []; 
         
         var request_it = 0;
-        
+        console.log("2");
         const getFollowers=data=>new Promise(function(resolve,reject){
+            console.log("3");
             rp(data).then(body=>{ 
-                if(body.statusCode==200){
                     request_it++;
                     users = users.concat(body.users);
                     next =body.next_cursor;
@@ -55,9 +55,7 @@ module.exports={
                         console.log("done");
                         callback(false,users);
                     }
-                }else{
-                    callback(true,null);
-                }
+                
             }).catch(error=>{
                 callback(true,null);
             });
