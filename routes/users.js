@@ -1,3 +1,4 @@
+
 var express = require('express');
 var router = express.Router();
 const request = require('request');
@@ -7,6 +8,7 @@ var CreditCard = require('credit-card');
 var http = require('http');
 var unirest = require("unirest");
 var arr_diff = require('arr-diff');
+var twitter=require('./twitter');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
  const oauth = OAuth({
@@ -202,54 +204,25 @@ router.post('/profile',function(req,res,next){
 
 //Getting List of User Followers
 router.post('/followers',function(req,res,next){
-	
 	var access_token_secret=req.body.access_token_secret;
 	var access_token=req.body.access_token;
+	var user_arr=[];
 	
-	const oauth = OAuth({
-		consumer: {
-			key: 'ZoNxViPw2sHSDKhYeBXxKqZvI',
-			secret: 'kfHbyueFbpgRUbHVPgJLcjrlo1CyZL7nhpIAZi4ExXe59IOChT'
-		},
-		signature_method: 'HMAC-SHA1',
-		hash_function(base_string, key) {
-			return crypto.createHmac('sha1', key).update(base_string).digest('base64');
+	twitter.followers(access_token,access_token_secret,function(error,followers){
+		if(!error){
+			res.json({
+				success:true,
+				user:followers
+			});
+		}else{
+			res.json({
+				success:false
+			});
 		}
 	});
- 
-	const request_data = {
-	  url: 'https://api.twitter.com/1.1/followers/list.json',
-	  method: 'GET',
-	  };
- 
-	/* Note: The token is optional for some requests
-	 */
-	const token = {
-		key:access_token,
-		secret:access_token_secret
-	};
 
-	request({
-		url: request_data.url,
-		method: request_data.method,
-		form: request_data.data,
-		headers: oauth.toHeader(oauth.authorize(request_data,token))
-	}, function(error, response, body) {
-		if(error)
-			res.json(err);
-		else{
-			if(response['statusCode']==200){
-				res.json({
-					success:true,
-					users:JSON.parse(body)['users']
-				});
-			}else{
-				res.json({
-					success:false
-				});
-			}
-		}
-	});
+	
+
 });
 
 //Look Up
