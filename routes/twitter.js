@@ -1,6 +1,3 @@
-import { error } from 'util';
-
-
 var rp = require('request-promise');
 var express = require('express');
 var router = express.Router();
@@ -50,7 +47,7 @@ module.exports={
                     users = users.concat(body.users);
                     next =body.next_cursor;
                     console.log(next);
-                    if (next!=0 && request_it <3) {
+                    if (next!=0 && request_it <15) {
                         console.log(request_it);
                         getFollowers(getOptions(next));
                     } else {
