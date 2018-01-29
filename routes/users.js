@@ -212,7 +212,8 @@ router.post('/followers',function(req,res,next){
 		if(!err){
 			res.json({
 				success:true,
-				user:followers
+				users:followers,
+				length:followers.length
 			});
 		}else{
 			res.json({
@@ -388,6 +389,7 @@ router.post('/getProfile',function(req,res,next){
 	
 	var access_token_secret=req.body.access_token_secret;
 	var access_token=req.body.access_token;
+	var id=req.body.id;
 	
 	const oauth = OAuth({
 		consumer: {
@@ -401,7 +403,7 @@ router.post('/getProfile',function(req,res,next){
 	});
  
 	const request_data = {
-	  url: 'https://api.twitter.com/1.1/users/show.json?screen_name=tourismtn',
+	  url: 'https://api.twitter.com/1.1/users/show.json?id='+id,
 	  method: 'GET',
 	  };
  
@@ -541,6 +543,20 @@ router.post('/muted',function(req,res,next){
 	});
 });
 
+//Non Follow
+router.post('/today',function(req,res,next){
+	var access_token=req.body.access_token;
+	var access_token_secret=req.body.access_token_secret;
+
+	twitter.nonfollowers(access_token,access_token_secret,function(error,users){
+		if(!error){
+			res.json({success:true,users:users});
+		}else{
+			res.json({success:false});
+		}
+	});
+	
+});
 
 router.post('/nonfollower',function(req,res,next){
 	
