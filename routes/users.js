@@ -544,7 +544,7 @@ router.post('/muted',function(req,res,next){
 });
 
 //Non Follow
-router.post('/today',function(req,res,next){
+router.post('/nonfollower',function(req,res,next){
 	var access_token=req.body.access_token;
 	var access_token_secret=req.body.access_token_secret;
 
@@ -558,85 +558,6 @@ router.post('/today',function(req,res,next){
 	
 });
 
-router.post('/nonfollower',function(req,res,next){
-	
-	var access_token_secret=req.body.access_token_secret;
-	var access_token=req.body.access_token;
-	
-	const oauth = OAuth({
-		consumer: {
-			key: 'ZoNxViPw2sHSDKhYeBXxKqZvI',
-			secret: 'kfHbyueFbpgRUbHVPgJLcjrlo1CyZL7nhpIAZi4ExXe59IOChT'
-		},
-		signature_method: 'HMAC-SHA1',
-		hash_function(base_string, key) {
-			return crypto.createHmac('sha1', key).update(base_string).digest('base64');
-		}
-	});
- 
-	const following_data = {
-	  url: 'https://api.twitter.com/1.1/friends/list.json',
-	  method: 'GET',
-	};
-	
-	const followers_data = {
-	  url: 'https://api.twitter.com/1.1/followers/list.json',
-	  method: 'GET',
-	};
-	
-	/* Note: The token is optional for some requests
-	 */
-	const token = {
-		key:access_token,
-		secret:access_token_secret
-	};
-
-	request({
-		url: following_data.url,
-		method: following_data.method,
-		form: following_data.data,
-		headers: oauth.toHeader(oauth.authorize(following_data,token))
-	}, function(error, response, body) {
-		if(error)
-			res.json(error);
-		else{
-			if(response['statusCode']==200){
-				var following=JSON.parse(body)['users'];
-				request({
-					url: following_data.url,
-					method: following_data.method,
-					form: following_data.data,
-					headers: oauth.toHeader(oauth.authorize(following_data,token))
-				}, function(err, f_response, f_body) {
-					if(err){
-						res.json(error);
-					}
-					else{
-						if(f_response['statusCode']==200){
-							var follower=JSON.parse(body)['users'];
-							
-
-							var diff=arr_diff(following, follower);
-							res.json({
-								users:diff,
-								success:true
-							});
-						}
-						else{
-							res.json({
-								success:false
-							});
-						}
-					}
-				});
-			}else{
-				res.json({
-					success:false
-				});
-			}
-		}
-	});
-});
 
 // Unfollow user by id
 router.post('/unfollow',function(req,res,next){
