@@ -101,54 +101,23 @@ router.post('/',function(req,res,next){
 
 //Getting List of User is following
 router.post('/following',function(req,res,next){
-	
 	var access_token_secret=req.body.access_token_secret;
 	var access_token=req.body.access_token;
 	
-	const oauth = OAuth({
-		consumer: {
-			key: 'ZoNxViPw2sHSDKhYeBXxKqZvI',
-			secret: 'kfHbyueFbpgRUbHVPgJLcjrlo1CyZL7nhpIAZi4ExXe59IOChT'
-		},
-		signature_method: 'HMAC-SHA1',
-		hash_function(base_string, key) {
-			return crypto.createHmac('sha1', key).update(base_string).digest('base64');
+	twitter.following(access_token,access_token_secret,function(err,following){
+		if(!err){
+			res.json({
+				success:true,
+				users:following,
+				length:following.length
+			});
+		}else{
+			res.json({
+				success:false
+			});
 		}
 	});
- 
-	const request_data = {
-	  url: 'https://api.twitter.com/1.1/friends/list.json',
-	  method: 'GET',
-	  };
- 
-	/* Note: The token is optional for some requests
-	 */
-	const token = {
-		key:access_token,
-		secret:access_token_secret
-	};
-
-	request({
-		url: request_data.url,
-		method: request_data.method,
-		form: request_data.data,
-		headers: oauth.toHeader(oauth.authorize(request_data,token))
-	}, function(error, response, body) {
-		if(error)
-			res.json(err);
-		else{
-			if(response['statusCode']==200){
-				res.json({
-					success:true,
-					users:JSON.parse(body)['users']
-				});
-			}else{
-				res.json({
-					success:false
-				});
-			}
-		}
-	});
+	
 });
 
 router.post('/profile',function(req,res,next){
@@ -206,7 +175,6 @@ router.post('/profile',function(req,res,next){
 router.post('/followers',function(req,res,next){
 	var access_token_secret=req.body.access_token_secret;
 	var access_token=req.body.access_token;
-	var user_arr=[];
 	
 	twitter.followers(access_token,access_token_secret,function(err,followers){
 		if(!err){
