@@ -9,7 +9,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
-
+var mongoose = require('mongoose');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -21,6 +21,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+mongoose.connect('mongodb://vivek:vivek@skillquest-shard-00-00-7o6mc.mongodb.net:27017,skillquest-shard-00-01-7o6mc.mongodb.net:27017,skillquest-shard-00-02-7o6mc.mongodb.net:27017/test?ssl=true&replicaSet=SkillQuest-shard-0&authSource=admin');
 
 app.use('/', index);
 app.use('/users', users);
