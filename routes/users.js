@@ -1030,7 +1030,7 @@ router.post('/save',function(req,res,next){
 		}else{
 			res.json({
 				success:true,
-				values:data
+				data:data
 			});
 		}
 	});
@@ -1050,7 +1050,7 @@ router.get('/get',function(req,res,next){
 		}else{
 			res.json({
 				success:true,
-				data:data
+				values:data
 			});
 		}
 	});
