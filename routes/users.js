@@ -1021,7 +1021,7 @@ router.post('/save',function(req,res,next){
 	console.log("1");
 	var _str=req.body.data;
 	
-	task.save(data,function(error,data){
+	task.save(_str,function(error,data){
 		if(error){
 			res.json({
 				success:false
