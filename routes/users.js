@@ -9,8 +9,6 @@ var http = require('http');
 var unirest = require("unirest");
 var arr_diff = require('arr-diff');
 var twitter=require('./twitter');
-var task=require('./task');
-var Data=require('./Data');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -1017,43 +1015,8 @@ router.post('/timeline',function(req,res,next){
 	});
 });
 
-router.post('/save',function(req,res,next){
-	console.log("1");
-	var _str=req.body.data;
+router.post('/friends/ids',function(req,res,next){
 	
-	task.save(_str,function(error,data){
-		if(error){
-			res.json({
-				success:false
-				
-			});
-		}else{
-			res.json({
-				success:true,
-				data:data
-			});
-		}
-	});
-
 });
 
-
-router.get('/get',function(req,res,next){
-	console.log("1");
-	
-	task.get(function(error,data){
-		if(error){
-			res.json({
-				success:false
-				
-			});
-		}else{
-			res.json({
-				success:true,
-				values:data
-			});
-		}
-	});
-
-});
 module.exports = router;
