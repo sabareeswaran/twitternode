@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var dragonball = require('./routes/dragonball');
 
 var app = express();
 var mongoose = require('mongoose');
@@ -26,6 +27,7 @@ mongoose.connect('mongodb://vivek:vivek@skillquest-shard-00-00-7o6mc.mongodb.net
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/dragonball', dragonball);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
