@@ -16,12 +16,13 @@ router.get('/create', function (req, res, next) {
             console.log(err);
         else {
             var obj = new Tokbox({
-                session: session['sessionId'],
-                token: token
+                sessionId: session['sessionId'],
+                token: token,
+                apiKey:session['ot']['apiKey']
             });
             obj.save(function (err, data) {
                 if (!err){
-                    res.json(session);
+                    res.json(data);
                 }else{
                     res.json(err);
                 }
@@ -31,4 +32,11 @@ router.get('/create', function (req, res, next) {
 
     });
 });
+
+
+router.get('/join',function(req,res,next){
+    Tokbox.find({apiKey:'46083292'},function(err,data){
+        res.json(data[0]);
+    });
+})
 module.exports = router;
