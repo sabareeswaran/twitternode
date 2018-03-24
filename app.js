@@ -25,7 +25,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 mongoose.connect('mongodb://vivek:vivek@skillquest-shard-00-00-7o6mc.mongodb.net:27017,skillquest-shard-00-01-7o6mc.mongodb.net:27017,skillquest-shard-00-02-7o6mc.mongodb.net:27017/test?ssl=true&replicaSet=SkillQuest-shard-0&authSource=admin');
-
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 app.use('/', index);
 app.use('/users', users);
 app.use('/dragonball', dragonball);
