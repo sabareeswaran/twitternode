@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Catch the Stars</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0b1020; color: #e8ecff;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+  body { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  h1 { margin: 8px 0; font-size: 18px; letter-spacing: 1px; opacity: 0.8; }
+  #wrap { position: relative; }
+  canvas { background: linear-gradient(#0b1020, #1a2350); border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5); display: block; }
+  #hud { position: absolute; top: 10px; left: 14px; right: 14px; display: flex;
+    justify-content: space-between; font-weight: 600; pointer-events: none; }
+  #overlay { position: absolute; inset: 0; display: none; align-items: center;
+    justify-content: center; flex-direction: column; background: rgba(0,0,0,0.55);
+    border-radius: 12px; }
+  #overlay button { padding: 10px 20px; font-size: 16px; border-radius: 8px;
+    border: 0; background: #6ee7ff; color: #0b1020; font-weight: 700; cursor: pointer; }
+  small { opacity: 0.7; margin-top: 10px; }
+</style>
+</head>
+<body>
+  <h1>CATCH THE STARS — move with mouse or arrow keys</h1>
+  <div id="wrap">
+    <canvas id="c" width="480" height="640"></canvas>
+    <div id="hud"><span id="score">Score: 0</span><span id="lives">Lives: 3</span></div>
+    <div id="overlay"><h2 id="msg">Game Over</h2><button id="again">Play Again</button></div>
+  </div>
+  <small>Catch stars (+1). Avoid bombs (-1 life).</small>
+<script>
+(() => {
+  const c = document.getElementById('c'), ctx = c.getContext('2d');
+  const W = c.width, H = c.height;
+  const scoreEl = document.getElementById('score');
+  const livesEl = document.getElementById('lives');
+  const overlay = document.getElementById('overlay');
+  const msg = document.getElementById('msg');
+  const again = document.getElementById('again');
+
+  let paddleX, score, lives, items, tick, spawnEvery, speed, running, keys;
+
+  function reset() {
+    paddleX = W / 2;
+    score = 0; lives = 3;
+    items = []; tick = 0; spawnEvery = 45; speed = 2.2;
+    running = true; keys = {};
+    overlay.style.display = 'none';
+    updateHud();
+  }
+
+  function updateHud() {
+    scoreEl.textContent = 'Score: ' + score;
+    livesEl.textContent = 'Lives: ' + lives;
+  }
+
+  function spawn() {
+    const isBomb = Math.random() < 0.25;
+    items.push({
+      x: 20 + Math.random() * (W - 40),
+      y: -20,
+      r: isBomb ? 14 : 12,
+      bomb: isBomb,
+      vy: speed + Math.random() * 1.5,
+    });
+  }
+
+  function drawStar(x, y, r) {
+    ctx.save(); ctx.translate(x, y); ctx.beginPath();
+    for (let i = 0; i < 10; i++) {
+      const a = (Math.PI / 5) * i;
+      const rr = i % 2 === 0 ? r : r / 2.3;
+      ctx.lineTo(Math.cos(a - Math.PI / 2) * rr, Math.sin(a - Math.PI / 2) * rr);
+    }
+    ctx.closePath();
+    ctx.fillStyle = '#ffd866'; ctx.fill();
+    ctx.restore();
+  }
+
+  function drawBomb(x, y, r) {
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = '#1a1a1a'; ctx.fill();
+    ctx.strokeStyle = '#ff6b6b'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = '#ff6b6b';
+    ctx.fillRect(x - 2, y - r - 6, 4, 6);
+  }
+
+  function step() {
+    if (!running) return;
+    tick++;
+    if (tick % Math.max(15, spawnEvery | 0) === 0) spawn();
+    if (tick % 300 === 0) { speed += 0.3; spawnEvery = Math.max(18, spawnEvery - 3); }
+
+    if (keys.ArrowLeft) paddleX -= 6;
+    if (keys.ArrowRight) paddleX += 6;
+    paddleX = Math.max(40, Math.min(W - 40, paddleX));
+
+    ctx.fillStyle = 'rgba(11,16,32,0.35)';
+    ctx.fillRect(0, 0, W, H);
+
+    const py = H - 30, pw = 80, ph = 14;
+    ctx.fillStyle = '#6ee7ff';
+    ctx.fillRect(paddleX - pw / 2, py, pw, ph);
+
+    for (let i = items.length - 1; i >= 0; i--) {
+      const it = items[i];
+      it.y += it.vy;
+      if (it.bomb) drawBomb(it.x, it.y, it.r); else drawStar(it.x, it.y, it.r);
+
+      const caught = it.y + it.r >= py && it.y - it.r <= py + ph
+        && Math.abs(it.x - paddleX) < pw / 2 + it.r;
+      if (caught) {
+        items.splice(i, 1);
+        if (it.bomb) { lives--; if (lives <= 0) return end('Game Over'); }
+        else score++;
+        updateHud();
+      } else if (it.y > H + 30) {
+        items.splice(i, 1);
+        if (!it.bomb) { lives--; if (lives <= 0) return end('Game Over'); updateHud(); }
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  function end(text) {
+    running = false;
+    msg.textContent = text + ' — Score: ' + score;
+    overlay.style.display = 'flex';
+  }
+
+  c.addEventListener('mousemove', e => {
+    const rect = c.getBoundingClientRect();
+    paddleX = (e.clientX - rect.left) * (W / rect.width);
+  });
+  c.addEventListener('touchmove', e => {
+    const rect = c.getBoundingClientRect();
+    paddleX = (e.touches[0].clientX - rect.left) * (W / rect.width);
+    e.preventDefault();
+  }, { passive: false });
+  window.addEventListener('keydown', e => keys[e.key] = true);
+  window.addEventListener('keyup', e => keys[e.key] = false);
+  again.addEventListener('click', () => { reset(); requestAnimationFrame(step); });
+
+  reset();
+  requestAnimationFrame(step);
+})();
+</script>
+</body>
+</html>
